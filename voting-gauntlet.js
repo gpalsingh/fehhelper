@@ -73,33 +73,35 @@ function getGauntletStatus(client) {
 }
 
 function isVotingGauntletLive() {
-  /* [message, fights happening] */
+  /* Returns [message, fights happening, event over] */
   moment.tz.setDefault('Asia/Tokyo');
   const startTime = moment("2019-01-03 16:00").tz('Asia/Tokyo');
   const time_now = moment();
   const total_rounds = 3;
-  const increment_hours = [45, 3];
+  /* Each round consists of 48 hours
+     45 hours fights, 3 hours wait
+     Last round is only 45 minutes 
+     The last value is sentinel to signal voting gauntlet ended */
+  const increment_hours = [45, 3, 45, 3, 45, -1];
   let message = '';
-  let fights_on = false;
+  let [fights_on, event_ended] = [false, false];
   if (time_now < startTime) {
-    return ["Event hasn't started yet!", fights_on];
+    return ["Event hasn't started yet!", fights_on, false];
   }
 
   let time_pointer = startTime;
-  let event_ended = true;
-  for (let round = 1; round <= total_rounds; round++) {
-    for (hours of increment_hours) {
-      fights_on = !fights_on;
-      time_pointer.add(hours, 'hours');
-      if (time_pointer > time_now) {
-        event_ended = false;
-        break;
-      }
+  for (hours of increment_hours) {
+    fights_on = !fights_on;
+    if (hours === -1) {
+      event_ended = true;
+      break;
     }
-    if (time_pointer > time_now) break;
+    time_pointer.add(hours, 'hours');
+    if (time_pointer > time_now) {
+      break;
+    }
   }
 
-  if (event_ended) fights_on = !fights_on;
   if (!fights_on) {
     if (event_ended) {
       message = 'The event ended. Let me go already...';
