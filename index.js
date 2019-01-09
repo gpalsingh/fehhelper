@@ -12,6 +12,7 @@ const config = require("./config.json");
 // config.prefix contains the message prefix.
 
 const vg_helper = require("./lib/vg-helper.js");
+const bg_announcer = require("./lib/bg-announcer.js");
 
 client.on("ready", () => {
   // This event will run if the bot starts, and logs in, successfully.
@@ -19,7 +20,7 @@ client.on("ready", () => {
   // Example of changing the bot's playing game to something useful. `client.user` is what the
   // docs refer to as the "ClientUser".
   client.user.setActivity(`Serving ${client.guilds.size} servers`);
-  vg_helper.setupVotingGauntletTimer(client);
+  bg_announcer.setupVotingGauntletTimer(client);
 });
 
 client.on("message", async message => {
@@ -59,7 +60,7 @@ client.on("message", async message => {
 
   if(command === "vg") {
     const m = await message.channel.send('Calculating results. Please wait');
-    vg_helper.getGauntletStatus().then(reply => {
+    vg_helper.getGauntletStatusMessage().then(reply => {
       m.edit(reply);
     });
   }
