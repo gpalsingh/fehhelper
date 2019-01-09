@@ -59,7 +59,7 @@ client.on("message", async message => {
   }
 
   if(command === "vg") {
-    const m = await message.channel.send('Calculating results. Please wait');
+    const m = await message.channel.send("Calculating results. Please wait");
     vg_helper.getGauntletStatusMessage().then(reply => {
       m.edit(reply);
     });
