@@ -2,13 +2,7 @@ const rp = require('request-promise');
 const cheerio = require('cheerio');
 const moment = require('moment-timezone');
 const util = require('./lib/util.js');
-
-
-const VG_NO = 19;
-const VG_URL = `https://support.fire-emblem-heroes.com/voting_gauntlet/tournaments/${VG_NO}?locale=en-US`;
-const FAIL_MESSAGE = 'I couldn\'t get the data for some reason. Blame nite!'
-const NAME_SELECTOR = 'body > div > section > article:nth-child(3) > ul > li > div > div > div > p:nth-child(1)';
-const POINTS_SELECTOR = 'body > div > section > article:nth-child(3) > ul > li > div > div > div > p:nth-child(2)';
+const config = require('./config.json');
 
 function numberWithCommas(x) {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -16,8 +10,8 @@ function numberWithCommas(x) {
 
 function extractGauntletData(html) {
   const $ = cheerio.load(html);
-  const all_names = $(NAME_SELECTOR);
-  const all_scores = $(POINTS_SELECTOR);
+  const all_names = $(CURRENT_NAME_SELECTOR);
+  const all_scores = $(CURRENT_POINTS_SELECTOR);
   const num_fights = all_names.length / 2;
   let fights_data = [];
 
@@ -68,14 +62,14 @@ function getGauntletStatus(client) {
   })
   .catch(err => {
     console.log(err);
-    return FAIL_MESSAGE;
+    return "I couldn't get the data for some reason. Blame nite!";
   });
 }
 
 function isVotingGauntletLive() {
   /* Returns [message, fights happening, event over] */
-  moment.tz.setDefault('Asia/Tokyo');
-  const startTime = moment("2019-01-03 16:00").tz('Asia/Tokyo');
+  moment.tz.setDefault(config.TIME_ZONE);
+  const startTime = moment(config.VG_START_TIME).tz(config.TIME_ZONE);
   const time_now = moment();
   const total_rounds = 3;
   /* Each round consists of 48 hours
