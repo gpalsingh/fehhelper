@@ -1,33 +1,17 @@
 const rp = require('request-promise');
 const cheerio = require('cheerio');
 const moment = require('moment-timezone');
+const util = require('./lib/util.js');
 
-const TESTING = false;
-const LOCAL = false;
+
 const VG_NO = 19;
 const VG_URL = `https://support.fire-emblem-heroes.com/voting_gauntlet/tournaments/${VG_NO}?locale=en-US`;
 const FAIL_MESSAGE = 'I couldn\'t get the data for some reason. Blame nite!'
 const NAME_SELECTOR = 'body > div > section > article:nth-child(3) > ul > li > div > div > div > p:nth-child(1)';
 const POINTS_SELECTOR = 'body > div > section > article:nth-child(3) > ul > li > div > div > div > p:nth-child(2)';
-let bot_channel;
 
 function numberWithCommas(x) {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-}
-
-if (TESTING) {
-  bot_channel = process.env.VG_BOT_TEST_CHANNEL;
-} else {
-  bot_channel = process.env.VG_BOT_CHANNEL;
-}
-const BOT_CHANNEL = bot_channel;
-
-function sendMessage(client, msg) {
-  if (TESTING && LOCAL) {
-    console.log(msg);
-    return;
-  }
-  client.channels.get(BOT_CHANNEL).send(msg);
 }
 
 function extractGauntletData(html) {
@@ -76,73 +60,75 @@ function createMessage(data) {
   return message;
 }
 
-function showGauntletStatus(client) {
-  rp(VG_URL)
+function getGauntletStatus(client) {
+  return rp(VG_URL)
   .then(html => {
     let data = extractGauntletData(html);
-    const message = createMessage(data);
-    sendMessage(client, message);
+    return createMessage(data);
   })
   .catch(err => {
     console.log(err);
-    sendMessage(client, FAIL_MESSAGE);
+    return FAIL_MESSAGE;
   });
 }
 
-function isVotingGauntletLive(client, background_task=false) {
+function isVotingGauntletLive() {
+  /* [message, fights happening] */
   moment.tz.setDefault('Asia/Tokyo');
   const startTime = moment("2019-01-03 16:00").tz('Asia/Tokyo');
   const time_now = moment();
   const total_rounds = 3;
   const increment_hours = [45, 3];
-  let event_on = false;
+  let message = '';
+  let fights_on = false;
   if (time_now < startTime) {
-    if (!background_task) sendMessage(client, "Event hasn't started yet!");
-    return event_on;
+    return ["Event hasn't started yet!", fights_on];
   }
 
   let time_pointer = startTime;
-  let late = true;
+  let event_ended = true;
   for (let round = 1; round <= total_rounds; round++) {
     for (hours of increment_hours) {
-      event_on = !event_on;
+      fights_on = !fights_on;
       time_pointer.add(hours, 'hours');
       if (time_pointer > time_now) {
-        late = false;
+        event_ended = false;
         break;
       }
     }
     if (time_pointer > time_now) break;
   }
 
-  if (late) event_on = !event_on;
-  if (!(event_on || background_task)) {
-    if (late) {
-      sendMessage(client, 'The event ended. Let me go already...');
+  if (event_ended) fights_on = !fights_on;
+  if (!fights_on) {
+    if (event_ended) {
+      message = 'The event ended. Let me go already...';
     } else {
-      sendMessage(client, 'Still waiting for next round to start');
+      message = 'Still waiting for next round to start';
     }
   }
 
-  return event_on;
+  return [message, fights_on];
 }
 
-function votingGauntletStatusBg(client) { 
-  if (isVotingGauntletLive(client, background_task=true)) {
-    showGauntletStatus(client);
+function showGauntletStatusBg(client) { 
+  let [_, fights_on] = isVotingGauntletLive();
+  if (fights_on) {
+    util.sendAnnouncement(getGauntletStatus(client));
   }
+  
 }
 
 function startVgTimer(client) {
-  votingGauntletStatusBg(client);
+  showGauntletStatusBg(client);
   const ms_in_hour = 60 * 60 * 1000;
-  setInterval(votingGauntletStatusBg, ms_in_hour, client);
+  setInterval(showGauntletStatusBg, ms_in_hour, client);
 }
 
 function setupVotingGauntletTimer(client) {
   moment.tz.setDefault('Asia/Tokyo');
   const now = moment();
-  // offset by 5 minutes over the hour
+  // offset by 5 minutes in case website is late to update
   const offset = 5;
   const minutes_left_till_hour = 60 + offset - now.minutes();
   const milliseconds_left = minutes_left_till_hour * 60 * 1000;
@@ -150,10 +136,14 @@ function setupVotingGauntletTimer(client) {
 }
 
 module.exports = {
-  votingGauntletStatus: function(client) { 
-    if (isVotingGauntletLive(client)) {
-      showGauntletStatus(client);
-    }
+  getGauntletStatus: function() {
+    /* Returns Promise containing string */
+    let [message, fights_on] = isVotingGauntletLive();
+    if (fights_on) return getGauntletStatus();
+    let messagePromise = new Promise((resolve, reject) => {
+      resolve(message);
+    });
+    return messagePromise;
   },
   setupVotingGauntletTimer: client => setupVotingGauntletTimer(client)
 }
