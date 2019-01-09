@@ -12,7 +12,6 @@ const config = require("./config.json");
 // config.prefix contains the message prefix.
 
 const vg = require("./voting-gauntlet.js");
-const votingGauntletStatus = vg.getGauntletStatus;
 
 client.on("ready", () => {
   // This event will run if the bot starts, and logs in, successfully.
@@ -59,7 +58,11 @@ client.on("message", async message => {
   }
 
   if(command === "vg") {
-    vg.getGauntletStatus().then(reply => message.channel.send(reply));
+    const m = await message.channel.send('Calculating results. Please wait');
+    vg.getGauntletStatus().then(reply => {
+      m.delete().catch(_=>{});
+      message.channel.send(reply);
+    });
   }
 });
 
