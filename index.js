@@ -60,8 +60,7 @@ client.on("message", async message => {
   if(command === "vg") {
     const m = await message.channel.send('Calculating results. Please wait');
     vg.getGauntletStatus().then(reply => {
-      m.delete().catch(_=>{});
-      message.channel.send(reply);
+      m.edit(reply);
     });
   }
 });
