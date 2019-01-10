@@ -4,5 +4,5 @@
   "CURRENT_NAME_SELECTOR": "body > div > section > article:nth-child(3) > ul > li > div > div > div > p:nth-child(1)",
   "CURRENT_POINTS_SELECTOR": "body > div > section > article:nth-child(3) > ul > li > div > div > div > p:nth-child(2)",
   "VG_START_TIME": "2019-01-03 16:00",
-  "TIME_ZONE": "Asia/Tokyo"
+  "JP_TIME_ZONE": "Asia/Tokyo"
 }
