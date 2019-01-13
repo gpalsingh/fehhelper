@@ -13,9 +13,10 @@
   "dependencies": {
     "cheerio": "^1.0.0-rc.2",
     "discord.js": "^11.4.2",
+    "latinize": "^0.4.0",
+    "memory-cache": "^0.2.0",
     "moment-timezone": "^0.5.23",
     "request": "^2.88.0",
-    "request-promise": "^4.2.2",
-    "latinize": "^0.4.0"
+    "request-promise": "^4.2.2"
   }
 }
