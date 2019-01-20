@@ -68,6 +68,33 @@ client.on("message", async message => {
       m.edit(reply);
     });
   }
+
+  if(command === "support") {
+    const author = message.member;
+    if (!author) {
+      /* Author is no longer member of guild */
+      return;
+    }
+
+    if (args.length === 0) {
+      message.channel.send("You need to specify the hero you want to support");
+      return;
+    }
+
+    const hero_name_args = args;
+    const hero_role = vg_helper.getRoleFromHeroName(message.channel, hero_name_args);
+    if (!hero_role) {
+      message.channel.send(`Couldn't find ${hero_name_args.join(" ")} in current gauntlet`);
+      return;
+    }
+
+    author.addRole(hero_role).then(_ => {
+      message.channel.send(`Hey ${author}, you have now joined ${hero_role}`);
+    }).catch(err => {
+      message.channel.send(`Failed to set role for ${author}`);
+      console.log(err);
+    })
+  }
 });
 
 client.login(process.env.FEH_VG_HELPER_TOKEN);
