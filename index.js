@@ -1,3 +1,5 @@
+const util = require("./lib/util.js");
+
 // Load up the discord.js library
 const Discord = require("discord.js");
 
@@ -12,7 +14,7 @@ const config = require("./config.json");
 // config.prefix contains the message prefix.
 
 const vg_helper = require("./lib/vg-helper.js");
-const bg_announcer = require("./lib/bg-announcer.js");
+const bg_announcer = require("./lib/bg-tasker.js");
 
 client.on("ready", () => {
   // This event will run if the bot starts, and logs in, successfully.
@@ -20,7 +22,9 @@ client.on("ready", () => {
   // Example of changing the bot's playing game to something useful. `client.user` is what the
   // docs refer to as the "ClientUser".
   client.user.setActivity("FEH");
-  bg_announcer.setupVotingGauntletTimer(client);
+  if (!util.getEventEnded()) {
+    bg_announcer.setupBackgroundTasks(client);
+  }
 });
 
 client.on("message", async message => {
