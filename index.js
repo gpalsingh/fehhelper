@@ -69,7 +69,7 @@ client.on("message", async message => {
     });
   }
 
-  if(command === "support") {
+  if(command === "follow") {
     const author = message.member;
     if (!author) {
       /* Author is no longer member of guild */
@@ -77,7 +77,7 @@ client.on("message", async message => {
     }
 
     if (args.length === 0) {
-      message.channel.send("You need to specify the hero you want to support");
+      message.channel.send("You need to specify the hero you want to follow");
       return;
     }
 
