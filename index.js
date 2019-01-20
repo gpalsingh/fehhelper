@@ -16,6 +16,18 @@ const config = require("./config.json");
 const vg_helper = require("./lib/vg-helper.js");
 const bg_announcer = require("./lib/bg-tasker.js");
 
+const USAGE_TEXT = {
+  vg: "```" + config.prefix + "vg```",
+  follow: "```" + config.prefix + "follow black knight```",
+  unfollow: "```" + config.prefix + "unfollow black knight```",
+}
+
+const HELP_TEXT = {
+  vg: "Get current voting gauntlet status",
+  follow: "Follow hero to receive multiplier notifications. Use full name of hero",
+  unfollow: "Unfollow hero to stop receiving multiplier notifications. Use full name of hero",
+}
+
 client.on("ready", () => {
   // This event will run if the bot starts, and logs in, successfully.
   console.log(`Bot has started, with ${client.users.size} users, in ${client.channels.size} channels of ${client.guilds.size} guilds.`);
@@ -78,8 +90,7 @@ client.on("message", async message => {
 
     /* Check if hero name is given */
     if (args.length === 0) {
-      msg = "You need to specify full name of the hero you want to follow";
-      msg += `\nExample: ${config.prefix}follow black knight`;
+      let msg = HELP_TEXT.follow + "\nUsage:" + USAGE_TEXT.follow;
       message.channel.send(msg);
       return;
     }
@@ -110,8 +121,7 @@ client.on("message", async message => {
 
     /* Check if hero name was given */
     if (args.length === 0) {
-      msg = "You need to specify full name of the hero you want to unfollow";
-      msg += `\nExample: ${config.prefix}unfollow black knight`;
+      let msg = HELP_TEXT.unfollow + "\nUsage:" + USAGE_TEXT.unfollow;
       message.channel.send(msg);
       return;
     }
@@ -131,6 +141,33 @@ client.on("message", async message => {
       message.channel.send(`Failed to remove role for ${author} :(`);
       console.log(err);
     });
+  }
+
+  if(command === "help") {
+    /* List available commands if no command specified */
+    if (args.length === 0) {
+      let msg = "Usage: ```" + config.prefix + "help [command name]```";
+      msg += "\n Following are the available commands:```";
+      for (let key of Object.keys(HELP_TEXT)) {
+        msg += `\n${key}`
+      }
+      msg +="```";
+      msg += `Start with "follow" if you're new`
+      message.channel.send(msg);
+      return;
+    }
+
+    let help_command = args.shift();
+
+    /* Check if command exists */
+    if (!HELP_TEXT[help_command]) {
+      message.channel.send(`Command ${help_command} does not exist`);
+      return;
+    }
+    help_command = help_command.toLowerCase();
+
+    /* Print full help message for command */
+    message.channel.send(HELP_TEXT[help_command] + "\nUsage:" + USAGE_TEXT[help_command]);
   }
 });
 
