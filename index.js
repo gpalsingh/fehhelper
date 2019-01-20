@@ -77,7 +77,9 @@ client.on("message", async message => {
     }
 
     if (args.length === 0) {
-      message.channel.send("You need to specify the hero you want to follow");
+      msg = "You need to specify the hero you want to follow";
+      msg += `\nExample: ${config.prefix}follow fjorm`;
+      message.channel.send(msg);
       return;
     }
 
