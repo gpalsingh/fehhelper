@@ -76,13 +76,15 @@ client.on("message", async message => {
       return;
     }
 
+    /* Check if hero name is given */
     if (args.length === 0) {
-      msg = "You need to specify the hero you want to follow";
-      msg += `\nExample: ${config.prefix}follow fjorm`;
+      msg = "You need to specify full name of the hero you want to follow";
+      msg += `\nExample: ${config.prefix}follow black knight`;
       message.channel.send(msg);
       return;
     }
 
+    /* Check if role for name exists */
     const hero_name_args = args;
     const hero_role = vg_helper.getRoleFromHeroName(message.channel, hero_name_args);
     if (!hero_role) {
@@ -90,12 +92,45 @@ client.on("message", async message => {
       return;
     }
 
+    /* Give role to user */
     author.addRole(hero_role).then(_ => {
-      message.channel.send(`Hey ${author}, you have now joined ${hero_role}`);
+      message.channel.send(`${author} you have now joined ${hero_role}`);
     }).catch(err => {
       message.channel.send(`Failed to set role for ${author}`);
       console.log(err);
     })
+  }
+
+  if(command === "unfollow") {
+    const author = message.member;
+    if (!author) {
+      /* Author is no longer member of guild */
+      return;
+    }
+
+    /* Check if hero name was given */
+    if (args.length === 0) {
+      msg = "You need to specify full name of the hero you want to unfollow";
+      msg += `\nExample: ${config.prefix}unfollow black knight`;
+      message.channel.send(msg);
+      return;
+    }
+
+    /* Check role exists */
+    const hero_name_args = args;
+    const hero_role = vg_helper.getRoleFromHeroName(message.channel, hero_name_args);
+    if (!hero_role) {
+      message.channel.send(`Couldn't find ${hero_name_args.join(" ")} in current gauntlet`);
+      return;
+    }
+
+    /* Remove role from user */
+    author.removeRole(hero_role).then(_ => {
+      message.channel.send(`${author} you have successfully left ${hero_role}`);
+    }).catch(err => {
+      message.channel.send(`Failed to remove role for ${author} :(`);
+      console.log(err);
+    });
   }
 });
 
