@@ -22,6 +22,7 @@ const USAGE_TEXT = {
   follow: "```" + config.prefix + "follow black knight```",
   unfollow: "```" + config.prefix + "unfollow black knight```",
   heroes: "```" + config. prefix + "heroes```",
+  site: "```" + config.prefix + "site```",
 }
 
 const HELP_TEXT = {
@@ -29,6 +30,7 @@ const HELP_TEXT = {
   follow: "Follow hero to receive multiplier notifications. Use full name of hero",
   unfollow: "Unfollow hero to stop receiving multiplier notifications. Use full name of hero",
   heroes: "Get a list of all the heroes in the current voting gauntlet",
+  site: "Get a link to official voting gauntlet status website"
 }
 
 client.on("ready", () => {
@@ -150,6 +152,11 @@ client.on("message", async message => {
 
       message.channel.send(msg);
     });
+  }
+
+  /* Link to current voting gauntlet site */
+  if(command === 'site') {
+    message.channel.send("https://support.fire-emblem-heroes.com/voting_gauntlet/current");
   }
 
   if(command === "help") {
