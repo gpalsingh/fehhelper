@@ -15,17 +15,20 @@ const config = require("./config.json");
 
 const vg_helper = require("./lib/vg-helper.js");
 const bg_announcer = require("./lib/bg-tasker.js");
+const scraper = require("./lib/scraper.js");
 
 const USAGE_TEXT = {
   vg: "```" + config.prefix + "vg```",
   follow: "```" + config.prefix + "follow black knight```",
   unfollow: "```" + config.prefix + "unfollow black knight```",
+  heroes: "```" + config. prefix + "heroes```",
 }
 
 const HELP_TEXT = {
   vg: "Get current voting gauntlet status",
   follow: "Follow hero to receive multiplier notifications. Use full name of hero",
   unfollow: "Unfollow hero to stop receiving multiplier notifications. Use full name of hero",
+  heroes: "Get a list of all the heroes in the current voting gauntlet",
 }
 
 client.on("ready", () => {
@@ -130,6 +133,22 @@ client.on("message", async message => {
     }).catch(err => {
       message.channel.send(`Failed to remove role for ${author} :(`);
       console.log(err);
+    });
+  }
+
+  /* List all heroes in current gauntlet */
+  if(command === "heroes") {
+    scraper.getAllHeroesNames().then(heroes_names => {
+      if (heroes_names.length < 8) {
+        message.channel.send("Sorry, I was unable to get the list. Please try again later").catch(_=>{});
+        return;
+      }
+
+      let msg = "Following are the heroes in current voting gauntlet```";
+      msg += heroes_names.join("\n");
+      msg += "```";
+
+      message.channel.send(msg);
     });
   }
 
