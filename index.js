@@ -131,7 +131,7 @@ client.on("message", async message => {
 
     /* Remove role from user */
     author.removeRole(hero_role).then(_ => {
-      message.channel.send(`${author} you have successfully left ${hero_role}`);
+      message.channel.send(`${author} you have successfully left ${hero_role.name}`);
     }).catch(err => {
       message.channel.send(`Failed to remove role for ${author} :(`);
       console.log(err);
