@@ -100,7 +100,7 @@ client.on("message", async message => {
 
     /* Give role to user */
     author.addRole(hero_role).then(_ => {
-      message.channel.send(`${author} you have now joined ${hero_role}`);
+      message.channel.send(`${author} you have now joined ${hero_role.name}`);
     }).catch(err => {
       message.channel.send(`Failed to set role for ${author}`);
       console.log(err);
