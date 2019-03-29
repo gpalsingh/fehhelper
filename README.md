@@ -20,7 +20,10 @@ you to interact with the [Discord API](https://discordapp.com/developers/docs/in
   - **prefix**: The bot prefix. Change it to some other character if it clashes with other bots.
   - **ARMY_ROLE**: Template for army roles that the bot creates or uses. Replace the first "#" symbol with hero name to create role. Example: "# Army # " becomes "Fjorm Army #"
   - **ANNOUNCEMENT_CHANNEL**: Exact name of the announcements channel that the bot creates or uses
-  
+  - **ED_ANNOUNCEMENT_CHANNEL**: Name of the channel that the server sends endurance bonus alerts to
+  - **ED_ROLE_NAME**: Name of the role used to get access to `ED_ANNOUNCEMENT_CHANNEL` channel
+  - **PRE_FETCH_HEROES**: Force bot to fetch data from website before round 1 starts. Could be "true" or "false". Make sure website is updated before using this.
+
 ### Environment variables
 The bot uses environment variables for some sensitive information. Setting up these variables differ with deployment methods.
 

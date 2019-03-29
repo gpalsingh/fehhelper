@@ -23,6 +23,7 @@ const USAGE_TEXT = {
   unfollow: "```" + config.prefix + "unfollow black knight```",
   heroes: "```" + config. prefix + "heroes```",
   site: "```" + config.prefix + "site```",
+  edbonus: "```" + config.prefix + "edbonus (on/off)```"
 }
 
 const HELP_TEXT = {
@@ -30,7 +31,8 @@ const HELP_TEXT = {
   follow: "Follow hero to receive multiplier notifications. Use full name of hero",
   unfollow: "Unfollow hero to stop receiving multiplier notifications. Use full name of hero",
   heroes: "Get a list of all the heroes in the current voting gauntlet",
-  site: "Get a link to official voting gauntlet status website"
+  site: "Get a link to official voting gauntlet status website",
+  edbonus: "Turn endurance multiplier alerts on or off",
 }
 
 client.on("ready", () => {
@@ -104,7 +106,7 @@ client.on("message", async message => {
     }).catch(err => {
       message.channel.send(`Failed to set role for ${author}`);
       console.log(err);
-    })
+    });
   }
 
   if(command === "unfollow") {
@@ -157,6 +159,56 @@ client.on("message", async message => {
   /* Link to current voting gauntlet site */
   if(command === 'site') {
     message.channel.send("https://support.fire-emblem-heroes.com/voting_gauntlet/current");
+  }
+
+  /* Turn endurance bonus notifications on or off */
+  if (command === 'edbonus') {
+    const author = message.member;
+    if (!author) {
+      /* Author is no longer member of guild */
+      return;
+    }
+
+    /* Check that an option is given with the command*/
+    if (args.length === 0) {
+      let msg = HELP_TEXT.edbonus + "\nUsage:" + USAGE_TEXT.edbonus;
+      message.channel.send(msg);
+      return;
+    }
+
+    /* Check that the role exists */
+    const ed_role = message.channel.guild.roles.find(x => x.name === config.ED_ROLE_NAME);
+    if (!ed_role) {
+      message.channel.send("This command is not ready yet\nPleasy try again later");
+      return;
+    }
+
+    const action = args.shift().toLowerCase();
+
+    if (action === 'on') {
+      /* Give user special role */
+      author.addRole(ed_role).then(_ => {
+        message.channel.send(`${author} you are now receiving endurance multiplier alerts`);
+      }).catch(err => {
+        message.channel.send(`Failed to complete operation\nPlease try again later`);
+        console.log(err);
+      });
+
+      return;
+    } else if (action === 'off') {
+      /* Remove role from user */
+      author.removeRole(ed_role).then(_ => {
+        message.channel.send(`${author} you are no longer receiving endurance multiplier alerts`);
+      }).catch(err => {
+        message.channel.send(`Failed to complete operation\nPlease try again later`);
+        console.log(err);
+      });
+      return;
+    }
+
+    let msg = 'This command takes only one of the two options: on or off';
+    msg += "\nUsage:" + USAGE_TEXT.edbonus;
+    message.channel.send(msg);
   }
 
   if(command === "help") {
