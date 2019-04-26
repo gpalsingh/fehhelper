@@ -148,7 +148,7 @@ client.on("message", async message => {
         return;
       }
 
-      let msg = "Following are the heroes in current voting gauntlet```";
+      let msg = "Following are the heroes in current voting gauntlet\n```\n";
       msg += heroes_names.join("\n");
       msg += "```";
 
