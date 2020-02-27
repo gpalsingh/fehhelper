@@ -1,11 +1,11 @@
 {
   "prefix": "!",
-  "VG_URL": "https://support.fire-emblem-heroes.com/voting_gauntlet/tournaments/32?locale=en-US",
+  "VG_URL": "https://support.fire-emblem-heroes.com/voting_gauntlet/tournaments/33?locale=en-US",
   "CURRENT_NAME_SELECTOR": "body > div > section > article:nth-child(3) > ul > li > div > div > div > p:nth-child(1)",
   "PRE_VOTING_NAME_SELECTOR": "body > div > section > article:nth-child(3) > ul > li > div > div > div > p.name",
   "CURRENT_POINTS_SELECTOR": "body > div > section > article:nth-child(3) > ul > li > div > div > div > p:nth-child(2)",
   "ALL_HEROES_NAME_SELECTOR": "body > div > section > article:nth-child(5) > ul > li > div > div:nth-child(2) > div > p.name",
-  "VG_START_TIME": "2020-01-30 16:00",
+  "VG_START_TIME": "2020-02-28 16:00",
   "JP_TIME_ZONE": "Asia/Tokyo",
   "ARMY_ROLE": "Team #",
   "ED_ROLE_NAME": "Endurance Bonuses",
