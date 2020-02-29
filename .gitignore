@@ -80,4 +80,3 @@ typings/
 .dynamodb/
 
 test.js
-test.html
