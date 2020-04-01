@@ -10,8 +10,5 @@
   "ANNOUNCEMENT_CHANNEL": "vg-disadvantage-alerts",
   "ED_ANNOUNCEMENT_CHANNEL": "vg-endurance-alerts",
   "PRE_FETCH_HEROES": "true",
-  "DISPLAY_NAMES": {
-    "2": "W!Sothis",
-    "7": "Sothis"
-  }
+  "DISPLAY_NAMES": {}
 }
