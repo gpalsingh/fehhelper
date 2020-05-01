@@ -101,7 +101,7 @@ client.on("message", async message => {
     }
 
     /* Give role to user */
-    author.addRole(hero_role).then(_ => {
+    author.roles.add(hero_role).then(_ => {
       message.channel.send(`${author} you have now joined ${hero_role.name}`);
     }).catch(err => {
       message.channel.send(`Failed to set role for ${author}`);
@@ -132,7 +132,7 @@ client.on("message", async message => {
     }
 
     /* Remove role from user */
-    author.removeRole(hero_role).then(_ => {
+    author.roles.remove(hero_role).then(_ => {
       message.channel.send(`${author} you have successfully left ${hero_role.name}`);
     }).catch(err => {
       message.channel.send(`Failed to remove role for ${author} :(`);
@@ -177,7 +177,7 @@ client.on("message", async message => {
     }
 
     /* Check that the role exists */
-    const ed_role = message.channel.guild.roles.find(x => x.name === config.ED_ROLE_NAME);
+    const ed_role = message.channel.guild.roles.cache.find(x => x.name === config.ED_ROLE_NAME);
     if (!ed_role) {
       message.channel.send("This command is not ready yet\nPleasy try again later");
       return;
@@ -187,7 +187,7 @@ client.on("message", async message => {
 
     if (action === 'on') {
       /* Give user special role */
-      author.addRole(ed_role).then(_ => {
+      author.roles.add(ed_role).then(_ => {
         message.channel.send(`${author} you are now receiving endurance multiplier alerts`);
       }).catch(err => {
         message.channel.send(`Failed to complete operation\nPlease try again later`);
@@ -197,7 +197,7 @@ client.on("message", async message => {
       return;
     } else if (action === 'off') {
       /* Remove role from user */
-      author.removeRole(ed_role).then(_ => {
+      author.roles.remove(ed_role).then(_ => {
         message.channel.send(`${author} you are no longer receiving endurance multiplier alerts`);
       }).catch(err => {
         message.channel.send(`Failed to complete operation\nPlease try again later`);

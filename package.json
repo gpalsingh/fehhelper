@@ -5,14 +5,14 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "start": "nodemon index.js"
   },
   "keywords": [],
   "author": "Nitemare",
   "license": "ISC",
   "dependencies": {
     "cheerio": "^1.0.0-rc.2",
-    "discord.js": "^11.4.2",
+    "discord.js": "^12.2.0",
     "latinize": "^0.4.0",
     "memory-cache": "^0.2.0",
     "moment-timezone": "^0.5.23",
@@ -20,6 +20,6 @@
     "request-promise": "^4.2.2"
   },
   "devDependencies": {
-    "nodemon": "^2.0.2"
+    "nodemon": "^2.0.3"
   }
 }
