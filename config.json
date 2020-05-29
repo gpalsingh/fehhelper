@@ -10,5 +10,8 @@
   "ANNOUNCEMENT_CHANNEL": "vg-disadvantage-alerts",
   "ED_ANNOUNCEMENT_CHANNEL": "vg-endurance-alerts",
   "PRE_FETCH_HEROES": "true",
-  "DISPLAY_NAMES": {}
+  "DISPLAY_NAMES": {
+    "3": "BKnight",
+    "4": "DKnight"
+  }
 }
